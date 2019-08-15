@@ -5,7 +5,7 @@ Dockerizar aplicacion Java
 2. Debe quedar corriendo el container
 3. Debe proveerse un link para probar el funcionamiento del contenedor
 
-	Link: http://10.252.7.178:8080
+	Link: http://10.252.7.166:8080
 
 ## Paso 1. Instalar docker y levantar servicio.
 
