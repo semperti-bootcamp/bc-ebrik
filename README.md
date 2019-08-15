@@ -1,34 +1,52 @@
-# Week 01 - Assignments
-Repositorio para los assignments de la primer semana.
+# Week 01 - Assignments 1
+Crear VM con Terraform
 
-# Java Application
+##  Detalle
+	1.0. La VM no debe tener mas de 2 cores y 2 GB de RAM
+	1.1. La VM debe tener CentOS7
+	1.2. La VM debe ser accesible mediante VPN
+	1.3. La VM debe poder conectarse a internet
 
-## Prerequisites
+## Pasos
 
-	1. Java 8
-	2. Maven 3.3+
-	3. MySQL 5.6+
-	4. Internet connection
-	
-	
-## Instrucciones para correr esta aplicación
+### 1. Instalo go y dep de go y compilo el provider de oVirt
+```
+Git: https://github.com/ovirt/terraform-provider-ovirt
+```
 
-	1. Configurar la conexión de la base de datos desde Code/src/main/resources/application.properties
-	2. Ubicate en la carpeta del código y ejecutá "mvn spring-boot:run".
-	3. Revisá la siguiente dirección http://localhost:8080
-	4. [Opcional] Por defecto, la aplicación almacena los PDFs en el directorio <User_home>/upload. Si querés cambiar este directorio, podés utilizar la propiedad -Dupload-dir=<path>.
-	5. [Opcional] Los PDFs predefinidos pueden encontrarse en la carpeta PDF. Si querés ver los PDFs, tenés que copiar los contenidos de esta carpeta a lo definido en el paso anterior.
-	
-## Datos de autenticación
+### 2. Instalo terraform en centos | macosx
+```
+wget https://releases.hashicorp.com/terraform/0.12.6/terraform_0.12.6_linux_amd64.zip
+unzip terraform_0.12.6_linux_amd64.zip -d /usr/bin/
+terraform -v
+```
 
-	El sistema viene con 4 cuentas pre-definidas:
-		1. publishers:
-			- username: publisher1 / password: publisher1
-			- username: publisher2 / password: publisher2
-		2. public users:
-			- username: user1 / password: user1
-			- username: user2 / password: user2
-            
-# Contact
+### 3. Copio binario de provider a directorio de plugins local de terraform probado en centos
 
-Cualquier duda o consulta, ubicanos en [Slack](https://semperti.slack.com).
+```
+mkdir ~/.terraform.d/plugins
+cp $GOPATH/bin/terraform-provider-ovirt ~/.terraform.d/plugins
+```
+
+### 4. Creo los script de terraform bajo el directorio terraform/bc-ebrik
+```
+- main.tf
+- variables.tf
+- output.tf
+```
+
+### 5. Aplico los cambios con terraform apply ingresando user y pass
+```
+terraform apply
+```
+
+El output de la salida se encuentra en terraform_apply.out
+
+### 6. Inconvenientes.
+
+	1. Al ejecutar el provider lanza el siguiente error colocando las credenciales
+	de dominio. 
+
+```
+* ovirt_vm.my_vm_1: 1 error(s) occurred:
+* ovirt_vm.my_vm_1: Failed to parse non-array sso with response
