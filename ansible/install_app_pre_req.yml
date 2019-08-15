@@ -1,0 +1,8 @@
+---
+- name: W1A2 - Ansible - Install all tools for Java Apps
+  hosts: app
+
+  roles:
+    - role: install_java
+    - role: install_maven
+    - role: install_mysql
