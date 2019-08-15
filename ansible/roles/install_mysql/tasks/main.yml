@@ -1,0 +1,47 @@
+---
+- name: Check If mysql is already installed or not 
+  shell: "rpm -qa | egrep -i 'mysql-community-server|mariadb-server|mysql-server' | cat"
+  register: mysql_installed
+  ignore_errors: true
+
+- name: Installed mysql server
+  debug: "msg={{mysql_installed.stdout}}"
+
+- block:
+  - name: Install MySQL Community Repo 
+    yum:
+      name: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+      state: present
+
+  - name: Instalar MySQL Community Packages 
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - mysql-community-server.x86_64 
+      - mysql-community-client.x86_64 
+      - mysql-connector-python.noarch
+      - MySQL-python
+
+  - name: Start and Enable MySQL Server
+    service:
+      name: mysqld
+      state: started
+      enabled: yes 
+
+  - name: Open port MySQL Server
+    firewalld:
+      port: 3306/tcp
+      permanent: yes
+      state: enabled
+
+  - name: Set root password for MySQL Server
+    mysql_user:
+      name: root
+      password: "{{ root_db_password }}"
+      host_all: yes
+      login_user: root 
+      login_password: "{{ root_db_password }}"
+      check_implicit_admin: true
+
+  when: mysql_installed.stdout == ""
