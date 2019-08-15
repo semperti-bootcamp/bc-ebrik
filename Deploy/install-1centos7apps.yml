@@ -1,0 +1,64 @@
+- hosts: bootcamp-ebrik
+  become: true
+  tasks:
+  - name: Clean all Cache
+    command: yum clean all
+    args:
+      warn: false
+
+  - name: Create cache
+    command: yum makecache
+    args:
+      warn: false
+
+  - name: Install Dependencies
+    yum:
+      update_cache: yes
+      name: "{{ item }}"
+      state: latest
+    loop:
+      - java-1.8.0-openjdk
+  
+     
+
+  - name: Download Maven 3.6.1
+    get_url: url=http://www-us.apache.org/dist/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.tar.gz dest=/home/apache-maven-3.6.1-bin.tar.gz
+  - name: Extract Maven
+    command: tar xvf /home/apache-maven-3.6.1-bin.tar.gz -C /home/
+    args:
+      warn: false
+  - name: Move
+    command: mv /home/apache-maven-3.6.1 /opt/maven
+  - name: Update Profile
+    copy: content="export M2_HOME=/opt/maven \n" dest=/etc/profile.d/maven.sh
+     # lineinfile is used to add additional or append lines to existing files
+ 
+  - name: add profile path maven
+    lineinfile:
+      path: /etc/profile.d/maven.sh
+      line: 'export PATH=${M2_HOME}/bin:${PATH}'
+    
+   
+
+
+  - name: Source profile maven
+    shell: source /etc/profile.d/maven.sh
+    args:
+      warn: false
+  
+    
+ 
+
+  - name: Open Port 80 - http
+    command: firewall-cmd --add-port=80/tcp --permanent
+    args:
+      warn: false
+  - name: Open Port 443 - https
+    command: firewall-cmd --add-port=443/tcp --permanent
+    args:
+      warn: false
+
+  - name: Reload Firewall
+    command: firewall-cmd --reload
+    args:
+      warn: false

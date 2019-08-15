@@ -1,0 +1,20 @@
+- name: W1A4 - Maven deploy release and snapshots
+  hosts: bootcamp-ebrik 
+
+  vars:
+    new_version: 5.2
+    project_path: /home/ebrik/Code/ 
+    snapshot: False
+
+  tasks:
+    - name: Change version release  
+      command: "mvn -f {{ project_path }}/pom.xml versions:set -DnewVersion={{ new_version }}"
+      when: not snapshot 
+      
+    - name: Change version snapshot 
+      command: "mvn -f {{ project_path }}/pom.xml versions:set -DnewVersion={{ new_version }}-SNAPSHOT"
+      when: snapshot 
+     
+    - name: Maven Deploy - Upload Nexus 
+      command: "mvn -f {{ project_path }}/pom.xml clean deploy"
+
