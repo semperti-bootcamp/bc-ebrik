@@ -4,7 +4,7 @@
 
     <groupId>com.semperti.trial</groupId>
     <artifactId>journals</artifactId>
-    <version>5.1-SNAPSHOT</version>
+    <version>5.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -15,7 +15,11 @@
     <connection>scm:git:git@github.com:semperti-bootcamp/bc-ebrik.git</connection>
     <url>git@github.com:semperti-bootcamp/bc-ebrik.git</url>
     <developerConnection>scm:git:git@github.com:semperti-bootcamp/bc-ebrik.git</developerConnection>
+<<<<<<< HEAD
       <tag>journal-5.2</tag>
+=======
+      <tag>journals-5.0</tag>
+>>>>>>> a45b37c75059d78ab6940bc02f3c92a92d77396b
     </scm>
 
     <!-- Configure remote publishing to private service, mvn deploy -->
