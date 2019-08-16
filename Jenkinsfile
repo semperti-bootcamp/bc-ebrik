@@ -10,51 +10,60 @@ pipeline {
     }
     environment {
         ANSIBLE_HOST_KEY_CHECKING = 'false'
+	registry = "ebrik/journal"
+           registryCredential = 'ebrik'
+		   AppVersion = "5.0"
     }
 
-    stages {
-        stage('Prepare Jenkins Slave') {
-            steps {
-                sh "sudo yum install wget git unzip epel-release ansible java-1.8.0-openjdk maven awscli -y"
-                sh "sudo curl https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip -o /usr/local/bin/terraform.zip"
-                sh "sudo unzip -u /usr/local/bin/terraform.zip -d /usr/local/bin/"
-            }
-        }
+    stages {   
         stage('Unit Test & Package') {
             steps {
-                withCredentials([file(credentialsId: 'MAVEN_SETTINGS', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn test -f pom.xml -s $MAVEN_SETTINGS"
-                    sh "mvn package -f pom.xml -s $MAVEN_SETTINGS"
-                }
+                    sh "mvn test -f /home/api/Code/"   
+                    sh "mvn package -f /home/api/Code/"   
+                
             }
         }
-        stage('Clean & Generate Snapshot') {
+        
+          stage('Clean & Generate Snapshot') {
             steps {
-                withCredentials([file(credentialsId: 'MAVEN_SETTINGS', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -B clean deploy -f pom.xml  -s $MAVEN_SETTINGS"
-                }
+                    sh "mvn versions:set -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/api/Code/pom.xml"
+                    sh "mvn -B clean deploy -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/api/Code/ -DskipTests"   
+                
             }
         }
         stage('Release & Deploy Image to Nexus'){
-            steps{
-                withCredentials([file(credentialsId: 'MAVEN_SETTINGS', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -B release:prepare release:perform -DscmCommentPrefix=\"[skip-ci]\" -f pom.xml  -s $MAVEN_SETTINGS"
-                }
+            steps{  
+                  
+                   sh "mvn -B release:clean release:prepare release:perform    -f /home/api/Code/ -DcheckModificationExcludeList=**  -DskipTests"   
+                 
+              
             }
         }
-        stage('Configure Docker Image on Docker Host') {
-            steps {
-                withCredentials([file(credentialsId: 'ANSIBLE_JSON_ALL', variable: 'ANSIBLE_JSON')]) {
-                    sh "ansible-playbook --extra-vars @$ANSIBLE_JSON ansible/create-docker-image.yml -i ansible/java-docker.txt"            
-                }
-            }
+  
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$env.AppVersion"
         }
-        stage('Publish Image to DTR') {
-            steps {
-                withCredentials([file(credentialsId: 'ANSIBLE_JSON_ALL', variable: 'ANSIBLE_JSON')]) {
-                    sh "ansible-playbook --extra-vars @$ANSIBLE_JSON ansible/push-docker-image.yml -i ansible/java-docker.txt"            
-                }
-            }
-        }
+      }
     }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$env.AppVersion"
+      }
+    }
+        
+        
+        
+  }
+
 }
