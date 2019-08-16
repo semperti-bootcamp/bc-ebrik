@@ -1,3 +1,5 @@
+#!groovy
+
 pipeline {
     options {
         ansiColor('xterm')
@@ -34,7 +36,7 @@ pipeline {
         stage('Release & Deploy Image to Nexus'){
             steps{  
                   
-                   sh "mvn -B release:clean release:prepare release:perform    -f /home/ebrik/bc-ebrik/Code/ -DcheckModificationExcludeList=**  -DskipTests"   
+                   sh "mvn -B release:clean release:prepare release:perform -f /home/ebrik/bc-ebrik/Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
                  
               
             }
