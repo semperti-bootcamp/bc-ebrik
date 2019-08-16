@@ -36,8 +36,8 @@ pipeline {
         stage('Release & Deploy Image to Nexus'){
             steps{  
                   
-                   #sh "mvn -B release:clean release:prepare release:perform -f Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
-                   sh "mvn -B clean deploy -f /home/ebrik/bc-ebrik/Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
+          //         #sh "mvn -B release:clean release:prepare release:perform -f Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
+                   sh "mvn -B clean deploy -f Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
               
             }
         }
