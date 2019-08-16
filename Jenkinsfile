@@ -45,7 +45,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$env.AppVersion"
+          dockerImage = sudo docker.build registry + ":$env.AppVersion"
         }
       }
     }
@@ -60,7 +60,7 @@ pipeline {
     }
     stage('Remove Unused docker image') {
       steps{
-        sh "docker rmi $registry:$env.AppVersion"
+        sh "sudo docker rmi $registry:$env.AppVersion"
       }
     }
         
