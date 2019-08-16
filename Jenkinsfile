@@ -18,23 +18,23 @@ pipeline {
     stages {   
         stage('Unit Test & Package') {
             steps {
-                    sh "mvn test -f /home/ebrik/semper/ansible/bc-ebrik/Code/"   
-                    sh "mvn package -f /home/ebrik/semper/ansible/bc-ebrik/Code/"   
+                    sh "mvn test -f /home/ebrik/bc-ebrik/Code/"   
+                    sh "mvn package -f /home/ebrik/bc-ebrik/Code/"   
                 
             }
         }
         
           stage('Clean & Generate Snapshot') {
             steps {
-                    sh "mvn versions:set -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/ebrik/semper/ansible/bc-ebrik/Code/pom.xml"
-                    sh "mvn -B clean deploy -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/ebrik/semper/ansible/bc-ebrik/Code/ -DskipTests"   
+                    sh "mvn versions:set -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/ebrik/bc-ebrik/Code/pom.xml"
+                    sh "mvn -B clean deploy -DnewVersion=$env.AppVersion-SNAPSHOT -f /home/ebrik/bc-ebrik/Code/ -DskipTests"   
                 
             }
         }
         stage('Release & Deploy Image to Nexus'){
             steps{  
                   
-                   sh "mvn -B release:clean release:prepare release:perform    -f /home/ebrik/semper/ansible/bc-ebrik/Code/ -DcheckModificationExcludeList=**  -DskipTests"   
+                   sh "mvn -B release:clean release:prepare release:perform    -f /home/ebrik/bc-ebrik/Code/ -DcheckModificationExcludeList=**  -DskipTests"   
                  
               
             }
