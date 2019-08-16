@@ -19,7 +19,7 @@ pipeline {
         stage('Unit Test & Package') {
             steps {
                     sh "mvn test -f /home/ebrik/bc-ebrik/Code/"   
-                    sh "mvn package -f /home/ebrik/bc-ebrik/Code/"   
+    //                sh "mvn package -f /home/ebrik/bc-ebrik/Code/"   
                 
             }
         }
