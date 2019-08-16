@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Prepare Jenkins Slave') {
             steps {
-                sh "yum install wget git unzip epel-release ansible java-1.8.0-openjdk maven awscli -y"
+                sh "sudo yum install wget git unzip epel-release ansible java-1.8.0-openjdk maven awscli -y"
                 sh "curl https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip -o /usr/local/bin/terraform.zip"
                 sh "unzip -u /usr/local/bin/terraform.zip -d /usr/local/bin/"
             }
