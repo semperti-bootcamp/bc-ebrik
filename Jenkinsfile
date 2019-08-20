@@ -45,7 +45,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = sudo docker.build registry + ":$env.AppVersion"
+          dockerImage = docker.build registry + ":$env.AppVersion"
         }
       }
     }
