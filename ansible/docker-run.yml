@@ -1,0 +1,32 @@
+
+---
+- name: Stage 6 - Docker Run App
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Stop old container
+      docker_container:
+        name: "{{ APP_NAME_LATEST }}"
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove old image
+      docker_container:
+        name: "{{ APP_NAME_LATEST }}"
+        state: absent
+      ignore_errors: yes
+
+    - name: Create new container
+      docker_container:
+        name: "{{ APP_NAME_LATEST }}"
+        image: "{{ DOCKER_REPO }}:latest"
+        state: present
+        recreate: yes
+        ports:
+          - "8080:8080"
+
+    - name: Start new container
+      docker_container:
+        name: "{{ APP_NAME_LATEST }}"
+        state: started

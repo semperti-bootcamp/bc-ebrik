@@ -50,22 +50,26 @@ pipeline {
 	// }
       }
     }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
+    stage('Stage 6 - Docker pull & run') {
+            steps {
+		dir("${env.WORKSPACE}/ansible"){
+			sh "pwd"
+                	sh "ansible-playbook --extra-vars @vars/ansible-vars.json docker-run.yml -e VERSION=$env.VERSION"
+		}
+		timeout(300) {
+		    waitUntil {
+		       script {
+			 def r = sh script: 'curl http://localhost:8080', returnStatus: true
+			 return (r == 0);
+		       }
+		    }
+		} 
+            }
         }
-      }
+        stage('Stage 7 - Check Application RUN') {
+            steps {
+		sh "curl http://localhost:8080"
+            }
+        }
     }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $registry:$env.AppVersion"
-      }
-    }    
-        
-        
-  }
-
 }
