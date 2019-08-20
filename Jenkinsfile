@@ -59,11 +59,6 @@ pipeline {
         }
       }
     }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "sudo docker rmi $registry:$env.AppVersion"
-      }
-    }
         
         
         
