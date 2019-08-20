@@ -1,6 +1,6 @@
   
 {
   "APP_NAME": "journal",
-  "APP_NAME_LATEST": "journal:5.0",
+  "APP_NAME_LATEST": "journal_latest",
   "DOCKER_REPO": "ebrik/journal"
 }

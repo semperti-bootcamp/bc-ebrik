@@ -20,7 +20,7 @@
     - name: Create new container
       docker_container:
         name: "{{ APP_NAME_LATEST }}"
-        image: "{{ DOCKER_REPO }}:5.0"
+        image: "{{ DOCKER_REPO }}:latest"
         state: present 
         recreate: yes
         ports:
