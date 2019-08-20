@@ -46,7 +46,7 @@ pipeline {
       steps{
       //  script {
       //    dockerImage = docker.build registry + ":$env.AppVersion"
-       		sh "docker build -t ebrik/journal:5.3 ."
+       		sh "sudo docker build -t ebrik/journal:5.3 ."
 	// }
       }
     }
