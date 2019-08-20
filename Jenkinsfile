@@ -54,7 +54,7 @@ pipeline {
             steps {
 		dir("${env.WORKSPACE}/ansible"){
 			sh "pwd"
-                	sh "ansible-playbook --extra-vars @vars/ansible-vars.json docker-run.yml -e VERSION=$env.VERSION"
+                	sh "ansible-playbook --extra-vars @vars/ansible-vars.json docker-run.yml"
 		}
 		timeout(300) {
 		    waitUntil {
