@@ -14,7 +14,7 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = 'false'
 	registry = "ebrik/journal"
            registryCredential = 'ebrik'
-		   AppVersion = "5.3"
+		   AppVersion = "5.4"
     }
 
     stages {   
