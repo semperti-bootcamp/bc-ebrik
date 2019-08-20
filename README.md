@@ -1,61 +1,24 @@
-Crear Pipeline de CD :
-8.0	Debe encontrarse dentro de un folder con el nombre bc-username
-8.1	Debe ejecutarse el build cada vez que se realice un PR
-8.2	Debe contener al menos las etapas de descarga de imagen, ejecución de contenedor y prueba de acceso a la aplicación mediante un curl y su output
+# Week 01 - Assigments 9 
 
+GitOps
 
-#### Output del curl al localhost
+	9.0	Se debe realizar la configuración de un Manifest en GitHub
+	9.1	La modificación del Manifest, sólo deberá afectar el ambiente elegido [tiene que haber, al menos, dos ambientes distintos (staging/prod)]
+	9.2	Debe ejecutarse automáticamente, tras únicamente, la modificación del Manifest y SOLO del ambiente elegido
 
-+ curl http://localhost:8080
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
+## Pasos
 
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100   782  100   782    0     0  63572      0 --:--:-- --:--:-- --:--:-- 65166
-<!DOCTYPE html>
+Utilizare esta rama como la rama master del Assigment 9. Los archivos son los que definen debajo.
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Semperti - Journal System</title>
-    <script src="js/angular-min.js"></script>
-    <script src="js/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-</head>
-<body ng-app="JournalApp" ng-controller="CategoryController">
-<h2>Bienvenido al sistema de jornales de Semperti</h2>
+	master -> gitops
+		- minifest.json
+		- Jenkinsfile
 
+	staging -> gitops-stage
+		- manifest.json
+		- stage-env.json
 
+	prod ->  gitops-prd
+		- manifest.json
+		- prd-env.json
 
-
-<div ng-controller="getCategories">
-    <table>
-        <thead>
-        <td>Categoría</td>
-        <td>Subscribirse</td>
-        </thead>
-        <tbody>
-
-        <tr ng-repeat="category in categories">
-            <td>{{category.name}}</td>
-            <td>
-                <a href="/login">Login</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</body>
-</html>
-
-[Pipeline] }
-[Pipeline] // stage
-[Pipeline] }
-[Pipeline] // ansiColor
-[Pipeline] }
-[Pipeline] // withEnv
-[Pipeline] }
-[Pipeline] // withEnv
-[Pipeline] }
-[Pipeline] // node
-[Pipeline] End of Pipeline
-Finished: SUCCESS
