@@ -44,9 +44,10 @@ pipeline {
   
     stage('Building image') {
       steps{
-        script {
-          dockerImage = docker.build registry + ":$env.AppVersion"
-        }
+      //  script {
+      //    dockerImage = docker.build registry + ":$env.AppVersion"
+       		sh "docker build -t ebrik/journal:5.3 ."
+	// }
       }
     }
     stage('Deploy Image') {
