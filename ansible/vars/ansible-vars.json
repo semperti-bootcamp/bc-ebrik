@@ -2,5 +2,5 @@
 {
   "APP_NAME": "journal",
   "APP_NAME_LATEST": "journal_latest",
-  "DOCKER_REPO": "ebrik/journal"
+  "DOCKER_REPO": "gonzaloacosta/journal"
 }
