@@ -21,7 +21,7 @@
       docker_container:
         name: "{{ APP_NAME_LATEST }}"
         image: "{{ DOCKER_REPO }}:5.0"
-        state: absent 
+        state: present 
         recreate: yes
         ports:
           - "8080:8080"
