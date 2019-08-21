@@ -1,0 +1,9 @@
+
+{
+    "version": "5.1",
+    "description": "Manifest para aplicacion Journals", 
+    "repo": "ebrik/journal",
+    "artifacts": {
+        "app": "journals-5.1.jar"
+    }
+}
