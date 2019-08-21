@@ -1,75 +1,52 @@
 #!groovy
 
+def manifest
+def environment
+
 pipeline {
-    options {
-        ansiColor('xterm')
-    }   
 
     agent {
         node (){
             label 'bc-ebrik'
-        } 
-    }
-    environment {
-        ANSIBLE_HOST_KEY_CHECKING = 'false'
-	registry = "ebrik/journal"
-           registryCredential = 'ebrik'
-		   AppVersion = "5.4"
+        }
     }
 
-    stages {   
-        stage('Unit Test & Package') {
+    stages {
+        stage('Deploy to Stage') {
+	    when{ 
+		branch 'w1a9-gitops-stage'
+	    }
             steps {
-                    sh "mvn test -f Code/pom.xml"   
-    //                sh "mvn package -f /home/ebrik/bc-ebrik/Code/"   
-                
-            }
-        }
-        
-          stage('Clean & Generate Snapshot') {
-            steps {
-                    sh "mvn versions:set -DnewVersion=$env.AppVersion-SNAPSHOT -f Code/pom.xml"
-                    sh "mvn -B clean deploy -DnewVersion=$env.AppVersion-SNAPSHOT -f Code/pom.xml -DskipTests"   
-                
-            }
-        }
-        stage('Release & Deploy Image to Nexus'){
-            steps{  
-                  
-          //         #sh "mvn -B release:clean release:prepare release:perform -f Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
-                   sh "mvn -B clean deploy -f Code/pom.xml -DcheckModificationExcludeList=**  -DskipTests"   
-              
-            }
-        }
-  
-    stage('Building image') {
-      steps{
-      //  script {
-      //    dockerImage = docker.build registry + ":$env.AppVersion"
-       		sh "sudo docker build -t docker.io/ebrik/journal:latest ."
-	// }
-      }
-    }
-    stage('Stage 6 - Docker pull & run') {
-            steps {
-		dir("${env.WORKSPACE}/ansible"){
-			sh "pwd"
-                	sh "ansible-playbook --extra-vars @vars/ansible-vars.json docker-run.yml"
+		sh "echo ${env.BRANCH_NAME}"
+		sh 'git branch'
+		script {
+            	   manifest = readJSON file: 'manifest.json'
+                   environment = readJSON file: 'stage-env.json'
+		   echo "Deploying the manifest ${manifest.version} for ${manifest.artifacts.web} to Staging"
+		   echo "URL: ${environment.app.healthcheck_url}"
 		}
-		timeout(300) {
-		    waitUntil {
-		       script {
-			 def r = sh script: 'curl http://localhost:8080', returnStatus: true
-			 return (r == 0);
-		       }
-		    }
-		} 
+		dir("${env.WORKSPACE}/ansible"){
+                	sh "ansible-playbook gitops-deploy.yml -e appname=${environment.app.name} -e repo=${manifest.repo} -e appport=${environment.app.port} -e version=${manifest.version}"
+		}
             }
         }
-        stage('Stage 7 - Check Application RUN') {
+
+        stage('Deploy to Production') {
+	    when{ 
+		branch 'w1a9-gitops-prd'
+	    }
             steps {
-		sh "curl http://localhost:8080"
+		sh 'git branch'
+		script {
+            	   manifest = readJSON file: 'manifest.json'
+                   environment = readJSON file: 'prd-env.json'
+		   echo "Deploying the manifest ${manifest.version} for ${manifest.artifacts.web} to Production"
+		   echo "URL: ${environment.app.healthcheck_url}"
+		}
+		dir("${env.WORKSPACE}/ansible"){
+                	sh "ansible-playbook gitops-deploy.yml -e appname=${environment.app.name} -e repo=${manifest.repo} -e appport=${environment.app.port} -e version=${manifest.version}"
+		}
             }
-        }
+    	}
     }
 }
