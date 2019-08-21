@@ -1,0 +1,27 @@
+---
+- name: Stage 5 - Docker build, tag & push images
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Replace the version in Dockerfile
+      #shell: sed -i -e "s/VERSION/{{ VERSION }}/g" Dockerfile
+      replace:
+        path: ../Dockerfile
+        regexp: "VERSION"
+        replace: "{{ VERSION }}"
+
+    - name: Docker build image
+      shell: cd .. ; sudo docker build --rm=true --no-cache --force-rm --tag {{ APP_NAME }}:{{ VERSION }} .
+
+    - name: Docker tag images version to latest
+      shell: |
+        sudo docker tag {{ APP_NAME }}:{{ VERSION }} {{ APP_NAME }}:latest
+        sudo docker tag {{ APP_NAME }}:{{ VERSION }} {{ DOCKER_REPO }}:{{ VERSION }}
+        sudo docker tag {{ APP_NAME }}:{{ VERSION }} {{ DOCKER_REPO }}:latest
+    - name: Docker push images to docker repo
+      shell: |
+        sudo docker login -u $USERNAME -p $PASSWORD docker.io
+        sudo docker push {{ DOCKER_REPO }}:{{ VERSION }}
+        sudo docker push {{ DOCKER_REPO }}:latest
+        sudo docker logout
