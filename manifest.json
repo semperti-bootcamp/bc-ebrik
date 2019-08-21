@@ -1,9 +1,48 @@
-
 {
-    "version": "5.1",
-    "description": "Manifest para aplicacion Journals", 
-    "repo": "ebrik/journal",
-    "artifacts": {
-        "app": "journals-5.1.jar"
+  "stg": {
+    "ver": {
+      "maj": 5,
+      "min": 3
+    },
+    "docker_repo": "ebrik/journal",
+    "app_name": "journals",
+    "app": {
+      "ip": "10.252.7.166",
+      "port": "8081",
+      "healthcheck_url": "http://10.252.7.166:8081",
+      "name": "journal_staging",
+      "artifacts": [
+        {
+          "app": "journals-5.3.jar"
+        }
+      ]
+    },
+    "db": {
+      "ip": "10.252.7.166",
+      "port": "3306"
     }
+  },
+  "prod": {
+    "ver": {
+      "maj": 5,
+      "min": 2
+    },
+    "docker_repo": "ebrik/journal",
+    "app_name": "journals",
+    "app": {
+      "ip": "10.252.7.166",
+      "port": "8080",
+      "healthcheck_url": "http://10.252.7.166:8080",
+      "name": "journal_latest",
+      "artifacts": [
+        {
+          "app": "journals-5.2.jar"
+        }
+      ]
+    },
+    "db": {
+      "ip": "10.252.7.166",
+      "port": "3306"
+    }
+  }
 }
