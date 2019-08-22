@@ -26,11 +26,11 @@ pipeline {
 
 
 	// STAGE2 - Unit Test
-       	stage('Unit Test') {
-            steps {
-                sh "mvn test -f Code/pom.xml"
-            }
-       	} 
+//       	stage('Unit Test') {
+//            steps {
+//                sh "mvn test -f Code/pom.xml"
+//            }
+//       	} 
 
 	// STAGE3 - Release and Upload to Nexus
        	stage('Release & Upload Nexus') {
