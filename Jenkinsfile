@@ -69,13 +69,13 @@ pipeline {
 		   env.run_stg_ver_min = sh(returnStdout: true, script: "echo '${env.run_stg_ver}' | awk -F'[ .]' '{print \$2}'").trim()
 
 		   // Prod versions
-		   env.run_prod_ver = sh(returnStdout: true, script: "sudo docker ps -a | grep journal_latest | awk '{ print \$2 }' | cut -d: -f2").trim()
-		   env.run_prod_ver_maj = sh(returnStdout: true, script: "echo '${env.run_prod_ver}' | awk -F'[ .]' '{print \$1}'").trim()
-		   env.run_prod_ver_min = sh(returnStdout: true, script: "echo '${env.run_prod_ver}' | awk -F'[ .]' '{print \$2}'").trim()
+		   env.run_prd_ver = sh(returnStdout: true, script: "sudo docker ps -a | grep journal_latest | awk '{ print \$2 }' | cut -d: -f2").trim()
+		   env.run_prd_ver_maj = sh(returnStdout: true, script: "echo '${env.run_prd_ver}' | awk -F'[ .]' '{print \$1}'").trim()
+		   env.run_prd_ver_min = sh(returnStdout: true, script: "echo '${env.run_prd_ver}' | awk -F'[ .]' '{print \$2}'").trim()
 
 		   // Print Versions 
 		   echo "Stage deployed: ${env.run_stg_ver} -- Stage to deploy: ${man.stg.ver.maj}.${man.stg.ver.min}"
-		   echo "Prod deployed: ${env.run_prod_ver} -- Prod to deploy: ${man.prod.ver.maj}.${man.prod.ver.min}"
+		   echo "Prod deployed: ${env.run_prd_ver} -- Prod to deploy: ${man.prd.ver.maj}.${man.prd.ver.min}"
 
 		   // Deploy stage if stg.ver deployed NOT EQUAL stg.ver in man.json
 		   env.deploy_stg = sh(returnStdout: true, script: "[ '${env.run_stg_ver_min}' -ne '${man.stg.ver.min}' ] && echo 'YES'").trim()
