@@ -78,10 +78,10 @@ pipeline {
 		   echo "Prod deployed: ${env.run_prd_ver} -- Prod to deploy: ${man.prd.ver.maj}.${man.prd.ver.min}"
 
 		   // Deploy stage if stg.ver deployed NOT EQUAL stg.ver in man.json
-		   env.deploy_stg = sh(returnStdout: true, script: " '${env.run_stg_ver_min}' -ne '${man.stg.ver.min}' && echo 'YES'").trim()
+		   env.deploy_stg = sh(returnStdout: true, script: " ['${env.run_stg_ver_min}' -ne '${man.stg.ver.min}'] && echo 'YES'").trim()
 		
 		   // Deploy prod if stg.ver deployed LESS THAN OR EQUAL stage in man.json
-		   env.deploy_prd = sh(returnStdout: true, script: " '${man.prd.ver.min}' -le '${man.stg.ver.min}' && echo 'YES'").trim()
+		   env.deploy_prd = sh(returnStdout: true, script: " ['${man.prd.ver.min}' -le '${man.stg.ver.min}'] && echo 'YES'").trim()
 
 		}  
             }
