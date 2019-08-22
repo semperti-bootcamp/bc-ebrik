@@ -81,7 +81,7 @@ pipeline {
 		   env.deploy_stg = sh(returnStdout: true, script: "[ '${env.run_stg_ver_min}' -ne '${man.stg.ver.min}' ] && echo 'YES'").trim()
 		
 		   // Deploy prod if stg.ver deployed LESS THAN OR EQUAL stage in man.json
-		   env.deploy_prod = sh(returnStdout: true, script: "[ '${man.prod.ver.min}' -le '${man.stg.ver.min}' ] && echo 'YES'").trim()
+		   env.deploy_prd = sh(returnStdout: true, script: "[ '${man.prd.ver.min}' -le '${man.stg.ver.min}' ] && echo 'YES'").trim()
 
 		}  
             }
@@ -103,12 +103,12 @@ pipeline {
 	// STAGE8 - Deploy to Prod
         stage('Deploy to Prod') {
 	    when { 
-		environment name: "deploy_prod", value: "YES"
+		environment name: "deploy_prd", value: "YES"
 	    } 
             steps {
-		sh "echo 'Deploy Prod Version: ${man.prod.ver.maj}.${man.prod.ver.min}'"
+		sh "echo 'Deploy Prod Version: ${man.prd.ver.maj}.${man.prd.ver.min}'"
 		dir("${env.WORKSPACE}/ansible"){
-                	sh "ansible-playbook deploy-app.yml -e appname=${man.prod.app.name} -e repo=${man.prod.docker_repo} -e appport=${man.prod.app.port} -e version=${man.prod.ver.maj}.${man.prod.ver.min}"
+                	sh "ansible-playbook deploy-app.yml -e appname=${man.prd.app.name} -e repo=${man.prd.docker_repo} -e appport=${man.prd.app.port} -e version=${man.prd.ver.maj}.${man.prd.ver.min}"
 		}
             }
     	}
