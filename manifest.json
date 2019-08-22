@@ -2,7 +2,7 @@
   "stg": {
     "ver": {
       "maj": 10,
-      "min": 7 
+      "min": 0 
     },
     "docker_repo": "ebrik/journal",
     "app_name": "journals",
@@ -13,7 +13,7 @@
       "name": "journal_stage",
       "artifacts": [
         {
-          "app": "journals-10.7.jar"
+          "app": "journals-10.0.jar"
         }
       ]
     },
@@ -25,7 +25,7 @@
   "prd": {
     "ver": {
       "maj": 10,
-      "min": 6
+      "min": 1
     },
     "docker_repo": "ebrik/journal",
     "app_name": "journals",
@@ -36,7 +36,7 @@
       "name": "journal_latest",
       "artifacts": [
         {
-          "app": "journals-10.6.jar"
+          "app": "journals-10.1.jar"
         }
       ]
     },
